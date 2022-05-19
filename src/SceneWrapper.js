@@ -5,6 +5,7 @@ import * as dat from 'dat.gui'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { Sierpinsky } from './Fractals/Sierpinsky'
+import fractal from "./Fractals/Fractal";
 
 export class SceneWrapper{
     constructor() {
@@ -18,8 +19,7 @@ export class SceneWrapper{
             
         // define constrols, not used yet    
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-
-        const gui = new dat.GUI()   //debug
+        this.gui = new dat.GUI()   // facem slider cu asta
         
         // structura de cct so far
         this.fractal = null           // our geometry
@@ -28,8 +28,9 @@ export class SceneWrapper{
     }
 
     init() {
-        var self = this;
-        //inital camera position
+        const self = this;
+
+        // initial camera position
         this.camera.position.set(0, 0, 2)
         this.scene.add(this.camera)
 
@@ -64,7 +65,6 @@ export class SceneWrapper{
             self.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
         })
 
-
         // Scene basic lights
         const pointLight = new THREE.PointLight(0xffffff, 0.1)
         pointLight.position.x = 2
@@ -72,18 +72,32 @@ export class SceneWrapper{
         pointLight.position.z = 4
         this.scene.add(pointLight)
 
-        // Create the fractal and add it to the scene
-        // TODO
-        this.fractal = new Sierpinsky(this)
-        this.fractal.init()
 
-        // const geometry = new THREE.TorusGeometry( .7, .2, 16, 100 );
-        // const material = new THREE.MeshBasicMaterial()
-        // material.color = new THREE.Color(0xff0000)
-        // const sphere = new THREE.Mesh(geometry,material)
-        // this.scene.add(sphere)
-        
-        // renderrrr
+        // TODO add a slider for the precision property
+        this.fractal = new Sierpinsky(this, 3)
+        this.fractal.init()
+        //this.gui.add(this.fractal, "precision", 1, 5, 1).name("Fractal Depth")
+
+        // TODO redraw the fractal when arrow_down pressed
+        document.onkeydown = function(e) {
+            console.log(e);
+            switch (e.code) {
+                case 'ArrowDown':
+                    if (self.fractal.precision > 0) {
+                        self.fractal.precision -= 1
+                        self.fractal.redraw()
+                    }
+                    break
+                case 'ArrowUp':
+                    if (self.fractal.precision < 4) {
+                        self.fractal.precision += 1
+                        self.fractal.redraw()
+                    }
+                    break
+            }
+        }
+
+        // render
         const clock = new THREE.Clock()
 
         const tick = () =>

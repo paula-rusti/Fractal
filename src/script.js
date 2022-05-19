@@ -1,13 +1,17 @@
 import './style.css'
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as dat from 'dat.gui'
 
 import SceneWrapper from './SceneWrapper'
 
 const scene = new SceneWrapper();
 
-console.log(scene)
+
+// function setupKeyLogger() {
+//     document.onkeydown = function(e) {
+//         console.log(e);
+//     }
+// }
+// setupKeyLogger()
+
 
 scene.init();
 scene.start();

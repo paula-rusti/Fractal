@@ -12,43 +12,49 @@ function draw_tetrahedron(x, y, z, b, h){
     return mesh;     // to be added to the canvas
 };
 
-function draw_sierpinsky_in_scene(scene, x, y, z, b, h, precision, iteration){
-    // contains the fractal generation logic, uses the above function to draw a tetrahedron pieces
-    if (iteration === precision) {
-        // one iteration completed, so we can add a piece to the scene
-        scene.add(draw_tetrahedron(x, y, z, b, h));
-    }
-    else {
-        // generate new params for the recursive calls
-        const new_b = b / 2;
-        const new_h = h / 2;
-
-        const childs = [
-            [ 0, new_h / 2 , 0 ],
-            [ -new_b, -new_h / 2, 0 ],
-            [ 0, -new_h / 2, new_b ],
-            [ new_b, -new_h / 2, 0 ],
-            [ 0, -new_h / 2, -new_b ],
-        ];
-
-        childs.forEach((point) => {
-            draw_sierpinsky_in_scene(scene, x + point[0], y + point[1], z + point[2], new_b, new_h, precision, iteration + 1);
-        });
-    }
-};
-
 export class Sierpinsky extends Fractal
 {
-    constructor(sceneWrapper) {
+    constructor(sceneWrapper, precision) {
         super(sceneWrapper)
+        this.precision = precision                  // gives the depth of the fractal, shall be tweaked from a slider
+        this.geometry = new THREE.Group()           // a group of tetrahedrons making up the fractal
+    }
+
+    redraw() {
+        console.log("redraw method called!!")
+        this.sceneWrapper.scene.remove(this.geometry)
+        this.geometry = new THREE.Group()
+        this.generate_fractal(0, 2, 0, 10, 10, this.precision, 0)
+        this.sceneWrapper.scene.add(this.geometry)
+    }
+
+    generate_fractal(x, y, z, b, h, precision, iteration) {
+        if (iteration === precision) {
+            this.geometry.add(draw_tetrahedron(x, y, z, b, h)); // one iteration completed, so we can add a piece to the group
+        }
+        else {
+            // generate new params for the recursive calls
+            const new_b = b / 2;
+            const new_h = h / 2;
+
+            const childs = [
+                [ 0, new_h / 2 , 0 ],
+                [ -new_b, -new_h / 2, 0 ],
+                [ 0, -new_h / 2, new_b ],
+                [ new_b, -new_h / 2, 0 ],
+                [ 0, -new_h / 2, -new_b ],
+            ];
+
+            childs.forEach((point) => {
+                this.generate_fractal(x + point[0], y + point[1], z + point[2], new_b, new_h, precision, iteration + 1);
+            });
+        }
     }
 
     init() {
-        // call a function to create the sierpinsky fractal in this scene
-        draw_sierpinsky_in_scene(this.sceneWrapper.scene, 0, 2, 0, 10, 10, 5, 0)
-
-        // reposition the camera
-        this.sceneWrapper.camera.position.set(0, -2, 20)
+        this.generate_fractal(0, 2, 0, 10, 10, this.precision, 0)
+        this.sceneWrapper.scene.add(this.geometry)
+        this.sceneWrapper.camera.position.set(0, -2, 20)    // reposition the camera
     }
 }
 
