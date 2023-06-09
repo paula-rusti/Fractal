@@ -1,4 +1,7 @@
-# Three.js Starter
+# Fractals
+Project for the Computer Graphics Course
+
+## Three.js Starter
 Courtesy of Bruno Simon of https://threejs-journey.xyz/
 
 ## Setup
