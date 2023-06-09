@@ -66,7 +66,7 @@ export class SceneWrapper{
         })
 
         // Scene basic lights
-        const pointLight = new THREE.PointLight(0xffffff, 0.1)
+        const pointLight = new THREE.PointLight(0xffffff, 0.9)
         pointLight.position.x = 2
         pointLight.position.y = 3
         pointLight.position.z = 4

@@ -1,5 +1,7 @@
 # Fractals
 Project for the Computer Graphics Course, year 3 semester 2.
+![Alt Text](fractal.gif)
+
 
 ## Three.js Starter
 Courtesy of Bruno Simon of https://threejs-journey.xyz/
