@@ -1,5 +1,5 @@
 # Fractals
-Project for the Computer Graphics Course
+Project for the Computer Graphics Course, year 3 semester 2.
 
 ## Three.js Starter
 Courtesy of Bruno Simon of https://threejs-journey.xyz/
